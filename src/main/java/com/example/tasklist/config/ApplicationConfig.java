@@ -41,6 +41,7 @@ public class ApplicationConfig {
     private final JwtTokenProvider tokenProvider;
     private final MinioProperties minioProperties;
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
