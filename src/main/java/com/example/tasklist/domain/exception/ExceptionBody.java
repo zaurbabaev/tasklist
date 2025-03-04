@@ -17,11 +17,12 @@ public class ExceptionBody {
     String message;
     Map<String, List<String>> errors = new HashMap<>();
 
-    public ExceptionBody(String message) {
+    public ExceptionBody(final String message) {
         this.message = message;
     }
 
-    public ExceptionBody(String message, Map<String, List<String>> errors) {
+    public ExceptionBody(final String message,
+                         final Map<String, List<String>> errors) {
         this.message = message;
         this.errors = errors;
     }

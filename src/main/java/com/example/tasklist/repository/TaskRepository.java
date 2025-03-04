@@ -22,9 +22,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
     @Query(value = """
-            SELECT * FROM tasks t 
+            SELECT * FROM tasks t
             WHERE r.expiration_date is not null
-            AND t.expiration_date 
+            AND t.expiration_date
             BETWEEN :start and :end
             """, nativeQuery = true)
     List<Task> findAllSoonTasks(@Param("start") Timestamp start,

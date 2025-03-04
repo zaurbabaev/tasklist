@@ -12,13 +12,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
 
-    public JwtUserDetailsService(UserService userService) {
+    public JwtUserDetailsService(final UserService userService) {
         this.userService = userService;
     }
 
     @Override
     @SneakyThrows
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(final String username) {
         User user = userService.getByUsername(username);
         return JwtEntityFactory.create(user);
     }

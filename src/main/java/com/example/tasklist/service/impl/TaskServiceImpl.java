@@ -21,7 +21,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final ImageService imageService;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ImageService imageService) {
+    public TaskServiceImpl(final TaskRepository taskRepository,
+                           final ImageService imageService) {
         this.taskRepository = taskRepository;
         this.imageService = imageService;
     }
@@ -29,21 +30,22 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "TaskService::getById", key = "#taskId")
-    public Task getById(Long taskId) {
+    public Task getById(final Long taskId) {
         return taskRepository.findById(taskId)
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Task not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Task> getAllByUserId(Long userId) {
+    public List<Task> getAllByUserId(final Long userId) {
         return taskRepository.findAllByUserId(userId);
     }
 
     @Override
     @Transactional
     @CachePut(value = "TaskService::getById", key = "#task.id")
-    public Task update(Task task) {
+    public Task update(final Task task) {
         Task existing = getById(task.getId());
         if (task.getStatus() == null) {
             existing.setStatus(Status.TODO);
@@ -60,7 +62,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     @Cacheable(value = "TaskService::getById", key = "#task.id")
-    public Task create(Task task, Long userId) {
+    public Task create(final Task task,
+                       final Long userId) {
         if (task.getStatus() == null) {
             task.setStatus(Status.TODO);
         }
@@ -68,7 +71,8 @@ public class TaskServiceImpl implements TaskService {
         try {
             taskRepository.assignTask(userId, task.getId());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Task assignment failed for userId: " + userId, e);
+            throw new IllegalArgumentException(
+                    "Task assignment failed for userId: " + userId, e);
         }
         return task;
     }
@@ -76,14 +80,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     @CacheEvict(value = "TaskService::getById", key = "#taskId")
-    public void delete(Long taskId) {
+    public void delete(final Long taskId) {
         taskRepository.deleteById(taskId);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "TaskService::getById", key = "#taskId")
-    public void uploadImage(Long taskId, TaskImage image) {
+    public void uploadImage(final Long taskId,
+                            final TaskImage image) {
         Task task = getById(taskId);
         String fileName = imageService.upload(image);
         task.getImages().add(fileName);

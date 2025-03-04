@@ -9,13 +9,16 @@ import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
 
-public class CustomSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
+public class CustomSecurityExpressionHandler
+        extends DefaultMethodSecurityExpressionHandler {
 
     private ApplicationContext applicationContext;
-    private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+    private final AuthenticationTrustResolver trustResolver =
+            new AuthenticationTrustResolverImpl();
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public void setApplicationContext(
+            final ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         this.applicationContext = applicationContext;
     }

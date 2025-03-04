@@ -48,7 +48,7 @@ public class ApplicationConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration) throws Exception {
+            final AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -56,7 +56,8 @@ public class ApplicationConfig {
     public MinioClient minioClient() {
         return MinioClient.builder()
                 .endpoint(minioProperties.getUrl())
-                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                .credentials(minioProperties.getAccessKey(),
+                        minioProperties.getSecretKey())
                 .build();
     }
 
@@ -104,17 +105,21 @@ public class ApplicationConfig {
                 .exceptionHandling(configurer ->
                         configurer.authenticationEntryPoint(
                                         (request, response, exception) -> {
-                                            response.setStatus(HttpStatus.UNAUTHORIZED.value()
+                                            response.setStatus(
+                                                    HttpStatus.UNAUTHORIZED
+                                                            .value()
                                             );
                                             response.getWriter()
-                                                    .write("Authentication required. Please provide valid credentials.");
+                                                    .write("Unauthorized");
                                         })
                                 .accessDeniedHandler(
                                         (request, response, exception) -> {
-                                            response.setStatus(HttpStatus.FORBIDDEN.value()
+                                            response.setStatus(
+                                                    HttpStatus.FORBIDDEN
+                                                            .value()
                                             );
                                             response.getWriter()
-                                                    .write("Access denied. You do not have permission to access this resource.");
+                                                    .write("Access denied.");
                                         }))
                 .authorizeHttpRequests(configurer ->
                         configurer.requestMatchers("/api/v1/auth/**")
@@ -125,7 +130,8 @@ public class ApplicationConfig {
                                 .permitAll()
                                 .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(tokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

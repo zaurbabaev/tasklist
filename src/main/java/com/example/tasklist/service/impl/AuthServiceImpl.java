@@ -17,27 +17,34 @@ public class AuthServiceImpl implements AuthService {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserService userService, JwtTokenProvider jwtTokenProvider) {
+    public AuthServiceImpl(final AuthenticationManager authenticationManager,
+                           final UserService userService,
+                           final JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public JwtResponse login(JwtRequest loginRequest) {
+    public JwtResponse login(final JwtRequest loginRequest) {
         JwtResponse jwtResponse = new JwtResponse();
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()));
         User user = userService.getByUsername(loginRequest.getUsername());
         jwtResponse.setId(user.getId());
         jwtResponse.setUsername(user.getUsername());
-        jwtResponse.setAccessToken(jwtTokenProvider.createAccessToken(user.getId(), user.getUsername(), user.getRoles()));
-        jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(user.getId(), user.getUsername()));
+        jwtResponse.setAccessToken(
+                jwtTokenProvider.createAccessToken(
+                        user.getId(), user.getUsername(), user.getRoles()));
+        jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(
+                user.getId(), user.getUsername()));
         return jwtResponse;
     }
 
     @Override
-    public JwtResponse refresh(String refresh) {
+    public JwtResponse refresh(final String refresh) {
         return jwtTokenProvider.refreshUserTokens(refresh);
     }
 }
