@@ -23,7 +23,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query(value = """
             SELECT * FROM tasks t
-            WHERE r.expiration_date is not null
+            WHERE t.expiration_date is not null
             AND t.expiration_date
             BETWEEN :start and :end
             """, nativeQuery = true)
@@ -38,6 +38,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             """, nativeQuery = true)
     void assignTask(@Param("userId") Long userId,
                     @Param("taskId") Long taskId);
+
 
 
 }
